@@ -1,4 +1,4 @@
-﻿# SPG-API
+﻿# TLOU-INFECTED-API
 
 ![Dotnet](https://img.shields.io/badge/-dotnet-black?style=for-the-badge&logoColor=white&logo=dotnet&color=512BD4)
 ![Swagger](https://img.shields.io/badge/-swagger-black?style=for-the-badge&logoColor=white&logo=swagger&color=85EA2D)
