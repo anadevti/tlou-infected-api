@@ -17,6 +17,19 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Remove="src\Domain\Enums\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="src\Domain\Enums\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="src\Domain\Enums\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="src\Domain\Enums\**" />
     </ItemGroup>
 
 </Project>
