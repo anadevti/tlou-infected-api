@@ -30,19 +30,19 @@ public abstract class InfectedStageSmartEnum
         public override string InfectionTime => "1 Year";
         public override int InfectionStage => 2;
     } 
-    
+
     private class BloaterStage : InfectedStageSmartEnum
     {
         public override string InfectionTime => "10 to 20 years";
         public override int InfectionStage => 2;
     }
-    
+
     private class ShamblerStage : InfectedStageSmartEnum
     {
         public override string InfectionTime => "22 Years";
         public override int InfectionStage => 2;
     }
-    
+
     private class RatKingStage : InfectedStageSmartEnum
     {
         public override string InfectionTime => "30 Years";
