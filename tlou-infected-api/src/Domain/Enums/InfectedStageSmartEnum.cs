@@ -1,51 +1,23 @@
-﻿namespace tlou_infected_api.Domain.Enums;
+﻿using Ardalis.SmartEnum;
 
-public abstract class InfectedStageSmartEnum
+namespace tlou_infected_api.Domain.Enums;
+
+public sealed  class InfectedStageSmartEnum: SmartEnum<InfectedStageSmartEnum>
 {
-    public static readonly InfectedStageSmartEnum Runner = new RunnerStage();
-    public static readonly InfectedStageSmartEnum Stalker = new StalkerStage();
-    public static readonly InfectedStageSmartEnum Clicker = new ClickerStage();
-    public static readonly InfectedStageSmartEnum Bloater = new BloaterStage();
-    public static readonly InfectedStageSmartEnum Shambler = new ShamblerStage();
-    public static readonly InfectedStageSmartEnum RatKing = new RatKingStage();
+    public static readonly InfectedStageSmartEnum Runner = new(nameof(Runner), 1, "2 Days", 1);
+    public static readonly InfectedStageSmartEnum Stalker = new(nameof(Stalker), 2, "2 weeks and 1 month", 2);
+    public static readonly InfectedStageSmartEnum Clicker = new(nameof(Clicker), 3, "1 Year", 3);
+    public static readonly InfectedStageSmartEnum Bloater = new(nameof(Bloater), 4, "10 to 20 years", 4);
+    public static readonly InfectedStageSmartEnum Shambler = new(nameof(Shambler), 5, "22 Years", 5);
+    public static readonly InfectedStageSmartEnum RatKing = new(nameof(RatKing), 6, "30 Years", 6);
 
-    public abstract string InfectionTime { get; }
-    public abstract int InfectionStage { get; }
+    public string InfectionTime { get; }
+    public int InfectionStage { get; }
 
-    private InfectedStageSmartEnum() { }
-
-    private class RunnerStage : InfectedStageSmartEnum
+    private InfectedStageSmartEnum(string name, int value, string infectionTime, int infectionStage) 
+        : base(name, value)
     {
-        public override string InfectionTime => "2 Days";
-        public override int InfectionStage => 1;
-    }
-
-    private class StalkerStage : InfectedStageSmartEnum
-    {
-        public override string InfectionTime => "2 weeks and 1 month";
-        public override int InfectionStage => 2;
-    }
-    private class ClickerStage : InfectedStageSmartEnum
-    {
-        public override string InfectionTime => "1 Year";
-        public override int InfectionStage => 2;
-    } 
-
-    private class BloaterStage : InfectedStageSmartEnum
-    {
-        public override string InfectionTime => "10 to 20 years";
-        public override int InfectionStage => 2;
-    }
-
-    private class ShamblerStage : InfectedStageSmartEnum
-    {
-        public override string InfectionTime => "22 Years";
-        public override int InfectionStage => 2;
-    }
-
-    private class RatKingStage : InfectedStageSmartEnum
-    {
-        public override string InfectionTime => "30 Years";
-        public override int InfectionStage => 2;
+        InfectionTime = infectionTime;
+        InfectionStage = infectionStage;
     }
 }
