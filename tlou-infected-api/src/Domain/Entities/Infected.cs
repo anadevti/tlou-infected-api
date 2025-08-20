@@ -8,7 +8,7 @@ public class Infected
 {
     [BsonId]
     [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public string? Id { get; set; }
     
     // [BsonElement("_type"), BsonRepresentation(BsonType.ObjectId)]
     // public InfectedStageSmartEnum Type { get; set; }
