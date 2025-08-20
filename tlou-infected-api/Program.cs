@@ -1,15 +1,12 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using Microsoft.EntityFrameworkCore;
 using tlou_infected_api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<MongoDB.Driver.MongoClient>();
+builder.Services.AddSingleton<AppDbContext>();
 
 var app = builder.Build();
 
@@ -21,5 +18,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+// app.UseAuthorization();
+app.MapControllers();
 app.Run();
