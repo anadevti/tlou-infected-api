@@ -1,4 +1,7 @@
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 using tlou_infected_api.Data;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -9,6 +12,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 
 var app = builder.Build();
+
+// env vars
+DotNetEnv.Env.Load();
+
+// Carrega config + variáveis de ambiente
+builder.Configuration.AddEnvironmentVariables();
+var connectionString = builder.Configuration["MONGODB_URI"];
+var client = new MongoClient(connectionString);
+var database = client.GetDatabase("test");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
