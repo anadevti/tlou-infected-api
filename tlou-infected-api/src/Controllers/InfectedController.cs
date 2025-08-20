@@ -2,6 +2,8 @@
 using MongoDB.Driver;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
+using tlou_infected_api.Domain.DTO;
+using tlou_infected_api.Domain.Enums;
 
 namespace tlou_infected_api.Controllers;
 
@@ -30,8 +32,15 @@ public class InfectedController: ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(Infected infected)
+    public async Task<ActionResult> Create(CreateInfectedDto createInfectedDto)
     {
+        var infected = new Infected
+        {
+            Type = InfectedStageSmartEnum.FromName(createInfectedDto.Type),
+            Description = createInfectedDto.Description,
+            Image = createInfectedDto.Image,
+            Weaknesses = createInfectedDto.Weaknesses
+        };
         await _infectedCollection.InsertOneAsync(infected);
         return CreatedAtAction(nameof(GetById),  new { id = infected.Id }, infected);
     }
