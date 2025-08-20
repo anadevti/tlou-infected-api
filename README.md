@@ -36,6 +36,7 @@ swagger platform by running the application locally and accessing:
 <a href="http://localhost:7259/swagger/index.html">http://localhost:7259/swagger/index.html</a>
 
 ## <a name="installation">✅ Installation and Run</a>
+test
 - Refresh all nuget packages
 - Add the dbPassword configuration in the appsettings.json
 ```json
