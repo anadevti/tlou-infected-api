@@ -9,6 +9,7 @@
 
 ## idea Jetbrains
 .idea/
+.env
 
 # User-specific files
 *.rsuser

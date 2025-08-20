@@ -11,7 +11,7 @@ public class AppDbContext
     {
         _configuration = configuration;
         
-        var connectionString = configuration.GetConnectionString("DbConnection");
+        var connectionString = configuration["MONGODB_URI"];
         var mongoUrl = MongoUrl.Create(connectionString);
         var mongoClient = new MongoClient(mongoUrl);
         _database = mongoClient.GetDatabase(mongoUrl.DatabaseName);

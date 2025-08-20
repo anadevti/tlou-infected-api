@@ -1,7 +1,11 @@
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 using tlou_infected_api.Data;
+using DotNetEnv;
 using MongoDB.Bson.Serialization;
 using tlou_infected_api.Data.Serialization;
 using tlou_infected_api.Domain.Enums;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -13,8 +17,16 @@ builder.Services.AddSingleton<AppDbContext>();
 
 var app = builder.Build();
 
-BsonSerializer.RegisterSerializer(typeof(InfectedStageSmartEnum), new InfectedStageSmartEnumSerializer());
 
+// env vars
+DotNetEnv.Env.Load();
+
+// Carrega config + variáveis de ambiente
+builder.Configuration.AddEnvironmentVariables();
+var connectionString = builder.Configuration["MONGODB_URI"];
+var client = new MongoClient(connectionString);
+var database = client.GetDatabase("test");
+BsonSerializer.RegisterSerializer(typeof(InfectedStageSmartEnum), new InfectedStageSmartEnumSerializer());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
