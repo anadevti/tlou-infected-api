@@ -41,11 +41,9 @@ public class SurvivorController : ControllerBase
             MainWeapon = createSurvivorDto.MainWeapon,
             Stealth = createSurvivorDto.Stealth
         };
-        await _survivorCollection.InsertOneAsync(Survivor);
+        await _survivorCollection.InsertOneAsync(survivor);
         return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
     }
-
-    public Survivor Survivor { get; set; }
 
     [HttpPut]
     public async Task<ActionResult> Update(Survivor survivor)
