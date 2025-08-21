@@ -1,8 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using tlou_infected_api.Domain.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace tlou_infected_api.Domain.Entities;
 
