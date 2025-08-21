@@ -21,11 +21,11 @@ public class Survivor
     
     [BsonElement("_strength"), BsonRepresentation(BsonType.Int32)]
     [Range(1,5)]
-    public string Strength { get; set; }
+    public int Strength { get; set; }
     
     [BsonElement("_agility"), BsonRepresentation(BsonType.Int32)]
     [Range(1,5)]
-    public string Agility { get; set; }
+    public int Agility { get; set; }
     
     [BsonElement("_mainWeapon"), BsonRepresentation(BsonType.String)]
     
@@ -34,6 +34,6 @@ public class Survivor
     [BsonElement("_stealth"), BsonRepresentation(BsonType.Int32)]
     [Range(1,5)]
     
-    public string Stealth { get; set; }
+    public int Stealth { get; set; }
     
 }
