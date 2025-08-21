@@ -9,7 +9,7 @@ namespace tlou_infected_api.Controllers;
 [Route("api/[controller]")]
 public class SurvivorController : ControllerBase
 {
-    private readonly IMongoCollection<Survivor>? _SurvivorCollection;
+    private readonly IMongoCollection<Survivor>? _survivorCollection;
     
     public SurvivorController(AppDbContext appDbContext)
     {
