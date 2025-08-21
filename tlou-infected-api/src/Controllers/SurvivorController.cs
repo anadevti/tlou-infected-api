@@ -9,24 +9,24 @@ namespace tlou_infected_api.Controllers;
 [Route("api/[controller]")]
 public class SurvivorController : ControllerBase
 {
-    private readonly IMongoCollection<Survivor>? _SurvivorCollection;
+    private readonly IMongoCollection<Survivor>? _survivorCollection;
     
     public SurvivorController(AppDbContext appDbContext)
     {
-        _SurvivorCollection = appDbContext.Database?.GetCollection<Survivor>("survivor");
+        _survivorCollection = appDbContext.Database?.GetCollection<Survivor>("survivor");
     }
     
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
-        return await _SurvivorCollection.Find(FilterDefinition<Survivor>.Empty).ToListAsync();
+        return await _survivorCollection.Find(FilterDefinition<Survivor>.Empty).ToListAsync();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Survivor?>> GetById(string id)
     {
-        var survivor = await _SurvivorCollection.Find(Survivor => Survivor.Id == id).FirstOrDefaultAsync();
+        var survivor = await _survivorCollection.Find(Survivor => Survivor.Id == id).FirstOrDefaultAsync();
         return survivor is not null ? Ok(survivor) : NotFound();
     }
 
@@ -41,7 +41,7 @@ public class SurvivorController : ControllerBase
             MainWeapon = createSurvivorDto.MainWeapon,
             Stealth = createSurvivorDto.Stealth
         };
-        await _SurvivorCollection.InsertOneAsync(Survivor);
+        await _survivorCollection.InsertOneAsync(Survivor);
         return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
     }
 
@@ -51,7 +51,7 @@ public class SurvivorController : ControllerBase
     public async Task<ActionResult> Update(Survivor survivor)
     {
         var filter = Builders<Survivor>.Filter.Eq(f => f.Id, survivor.Id);
-        var updateedSurvivor = await _SurvivorCollection.ReplaceOneAsync(filter, survivor);
+        var updateedSurvivor = await _survivorCollection.ReplaceOneAsync(filter, survivor);
         return Ok(updateedSurvivor);
     }
 
@@ -59,7 +59,7 @@ public class SurvivorController : ControllerBase
     public async Task<ActionResult> Delete(string id)
     {
         var filter = Builders<Survivor>.Filter.Eq(f => f.Id, id);
-        await _SurvivorCollection.DeleteOneAsync(filter);
+        await _survivorCollection.DeleteOneAsync(filter);
         return Ok();
     }
     

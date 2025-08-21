@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.WebEncoders.Testing;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -13,23 +14,25 @@ public class Survivor
     
     public string? Id { get; set; }
     
-    [BsonElement("_life"), BsonRepresentation(BsonType.ObjectId)]
     
-    public string Life { get; set; }
+   [BsonElement("_life"), BsonRepresentation(BsonType.Int32)]
+   [Range(1,10)]
+   public int Life { get; set; }
     
-    [BsonElement("_strength"), BsonRepresentation(BsonType.ObjectId)]
-    
+    [BsonElement("_strength"), BsonRepresentation(BsonType.Int32)]
+    [Range(1,5)]
     public string Strength { get; set; }
     
-    [BsonElement("_agility"), BsonRepresentation(BsonType.ObjectId)]
-    
+    [BsonElement("_agility"), BsonRepresentation(BsonType.Int32)]
+    [Range(1,5)]
     public string Agility { get; set; }
     
-    [BsonElement("_mainWeapon"), BsonRepresentation(BsonType.ObjectId)]
+    [BsonElement("_mainWeapon"), BsonRepresentation(BsonType.String)]
     
     public string MainWeapon { get; set; }
     
-    [BsonElement("_stealth"), BsonRepresentation(BsonType.ObjectId)]
+    [BsonElement("_stealth"), BsonRepresentation(BsonType.Int32)]
+    [Range(1,5)]
     
     public string Stealth { get; set; }
     

@@ -1,6 +1,6 @@
 namespace tlou_infected_api.Domain.Enums;
 
-public enum Survivor_Enum
+public enum SurvivorEnum
 {
     Id,
     Life,
