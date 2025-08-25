@@ -4,7 +4,6 @@ using tlou_infected_api.Domain.Enums;
 
 namespace tlou_infected_api.Domain.Entities;
 
-
 public class Faction
 {
     [BsonId]

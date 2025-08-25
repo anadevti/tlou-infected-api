@@ -5,27 +5,25 @@ using DotNetEnv;
 using MongoDB.Bson.Serialization;
 using tlou_infected_api.Data.Serialization;
 using tlou_infected_api.Domain.Enums;
-
+using tlou_infected_api.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration["MONGODB_URI"];
+var client = new MongoClient(connectionString);
+var database = client.GetDatabase("test");
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
+builder.Services.AddSingleton<IMongoDatabase>(database);
+builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 
 var app = builder.Build();
 
-
-// env vars
 DotNetEnv.Env.Load();
 
-// Carrega config + variáveis de ambiente
-builder.Configuration.AddEnvironmentVariables();
-var connectionString = builder.Configuration["MONGODB_URI"];
-var client = new MongoClient(connectionString);
-var database = client.GetDatabase("test");
 BsonSerializer.RegisterSerializer(typeof(InfectedStageSmartEnum), new InfectedStageSmartEnumSerializer());
 
 // Configure the HTTP request pipeline.
