@@ -12,8 +12,4 @@ public interface IMongoRepository <T> where T : class
     //Task UpdateAsync(bool FactionStatus);
     Task UpdateAsync(string id, T entity );
     Task DeleteAsync(string id);
-    
-    
-    
-    
 }
