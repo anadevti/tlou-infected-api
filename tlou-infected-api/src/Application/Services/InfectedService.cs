@@ -29,8 +29,18 @@ public class InfectedService
         };
         await _infectedCollection.InsertOneAsync(infected);
         return infected;
-        
-        // method PUT, add?
-        
+    }
+    public async Task<bool> UpdateInfected(Infected infected)
+    {
+        var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
+        var result = await _infectedCollection.ReplaceOneAsync(filter, infected);
+        return result.ModifiedCount > 0;
+    }
+
+    public async Task<bool> DeleteInfected(string i, Infected infected)
+    {
+        var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
+        await _infectedCollection.DeleteOneAsync(filter);
+        return true;
     }
 }

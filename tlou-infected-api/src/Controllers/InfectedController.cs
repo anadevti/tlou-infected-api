@@ -45,16 +45,14 @@ public class InfectedController: ControllerBase
     [HttpPut]
     public async Task<ActionResult> Update(Infected infected)
     {
-        var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
-        var updateedInfected = await _infectedCollection.ReplaceOneAsync(filter, infected);
-        return Ok(updateedInfected);
+        var success = await _service.UpdateInfected(infected);
+        return success ? Ok() : NotFound();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(string id, Infected infected)
     {
-        var filter = Builders<Infected>.Filter.Eq(f => f.Id, id);
-        await _infectedCollection.DeleteOneAsync(filter);
-        return Ok();
+        var success = await _service.DeleteInfected(id, infected);
+        return success ? Ok() : NotFound();
     }
 }
