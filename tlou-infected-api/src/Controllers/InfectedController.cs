@@ -46,7 +46,7 @@ public class InfectedController: ControllerBase
     public async Task<ActionResult> Update(CreateInfectedDto createInfectedDto)
     {
         var success = await _service.UpdateInfected(createInfectedDto);
-        return success ? Ok(createInfectedDto) : NotFound();
+        return success ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id}")]
