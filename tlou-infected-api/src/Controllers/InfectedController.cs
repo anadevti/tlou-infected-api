@@ -43,10 +43,10 @@ public class InfectedController: ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> Update(Infected infected)
+    public async Task<ActionResult> Update(CreateInfectedDto createInfectedDto)
     {
-        var success = await _service.UpdateInfected(infected);
-        return success ? Ok(infected) : NotFound();
+        var success = await _service.UpdateInfected(createInfectedDto);
+        return success ? Ok(createInfectedDto) : NotFound();
     }
 
     [HttpDelete("{id}")]
