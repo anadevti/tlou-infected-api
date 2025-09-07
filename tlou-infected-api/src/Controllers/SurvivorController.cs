@@ -1,33 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
+using tlou_infected_api.Repository;
 
 namespace tlou_infected_api.Controllers;
 
 [Route("api/[controller]")]
 public class SurvivorController : ControllerBase
 {
-    private readonly IMongoCollection<Survivor>? _survivorCollection;
+    private readonly IMongoRepository<Survivor> _survivorRepository; 
     
-    public SurvivorController(AppDbContext appDbContext)
+    public SurvivorController(IMongoRepository<Survivor> survivorRepository)
     {
-        _survivorCollection = appDbContext.Database?.GetCollection<Survivor>("survivor");
+        _survivorRepository = survivorRepository;
     }
     
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
-        return await _survivorCollection.Find(FilterDefinition<Survivor>.Empty).ToListAsync();
+        return await _survivorRepository.GetAllAsync();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Survivor?>> GetById(string id)
     {
-        var survivor = await _survivorCollection.Find(Survivor => Survivor.Id == id).FirstOrDefaultAsync();
-        return survivor is not null ? Ok(survivor) : NotFound();
+        var survivor = _survivorRepository.GetByIdAsync(id);
+        return Ok (survivor);
     }
 
     [HttpPost]
@@ -41,24 +41,21 @@ public class SurvivorController : ControllerBase
             MainWeapon = createSurvivorDto.MainWeapon,
             Stealth = createSurvivorDto.Stealth
         };
-        await _survivorCollection.InsertOneAsync(survivor);
+        await _survivorRepository.AddAsync(survivor);
         return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
     }
 
     [HttpPut]
     public async Task<ActionResult> Update(Survivor survivor)
     {
-        var filter = Builders<Survivor>.Filter.Eq(f => f.Id, survivor.Id);
-        var updateedSurvivor = await _survivorCollection.ReplaceOneAsync(filter, survivor);
-        return Ok(updateedSurvivor);
+        await _survivorRepository.UpdateAsync(survivor.Id, survivor);
+        return Ok();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {
-        var filter = Builders<Survivor>.Filter.Eq(f => f.Id, id);
-        await _survivorCollection.DeleteOneAsync(filter);
+        await _survivorRepository.DeleteAsync(id);
         return Ok();
     }
-    
 }

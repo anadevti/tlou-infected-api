@@ -4,6 +4,7 @@ using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
 using tlou_infected_api.Domain.Enums;
+using tlou_infected_api.Application.Services;
 
 namespace tlou_infected_api.Controllers;
 
@@ -11,11 +12,14 @@ namespace tlou_infected_api.Controllers;
 [ApiController]
 public class InfectedController: ControllerBase
 {
+    // constructors
     private readonly IMongoCollection<Infected>? _infectedCollection;
+    private readonly InfectedService _service;
 
     public InfectedController(AppDbContext appDbContext)
     {
         _infectedCollection = appDbContext.Database?.GetCollection<Infected>("infected");
+        _service = new InfectedService(appDbContext);
     }
 
     [HttpGet]
@@ -34,30 +38,21 @@ public class InfectedController: ControllerBase
     [HttpPost]
     public async Task<ActionResult> Create(CreateInfectedDto createInfectedDto)
     {
-        var infected = new Infected
-        {
-            Type = InfectedStageSmartEnum.FromName(createInfectedDto.Type),
-            Description = createInfectedDto.Description,
-            Image = createInfectedDto.Image,
-            Weaknesses = createInfectedDto.Weaknesses
-        };
-        await _infectedCollection.InsertOneAsync(infected);
+        var infected = await _service.CreateInfected(createInfectedDto); // service infected sendo chamado
         return CreatedAtAction(nameof(GetById),  new { id = infected.Id }, infected);
     }
 
     [HttpPut]
     public async Task<ActionResult> Update(Infected infected)
     {
-        var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
-        var updateedInfected = await _infectedCollection.ReplaceOneAsync(filter, infected);
-        return Ok(updateedInfected);
+        var success = await _service.UpdateInfected(infected);
+        return success ? Ok(infected) : NotFound();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {
-        var filter = Builders<Infected>.Filter.Eq(f => f.Id, id);
-        await _infectedCollection.DeleteOneAsync(filter);
-        return Ok();
+        var success = await _service.DeleteInfected(id);
+        return success ? Ok() : NotFound();
     }
 }

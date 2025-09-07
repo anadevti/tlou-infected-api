@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 
 namespace tlou_infected_api.Data;
 
@@ -12,12 +13,13 @@ public class AppDbContext
         _configuration = configuration;
         
         var connectionString = configuration["MONGODB_URI"];
+        var databaseName = configuration["MONGODB_DATABASE"];
+        
         var mongoUrl = MongoUrl.Create(connectionString);
         var mongoClient = new MongoClient(mongoUrl);
-        _database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
+        
+        _database = mongoClient.GetDatabase(databaseName ?? mongoUrl.DatabaseName);
     }
     
-    public IMongoDatabase? Database => _database;
-
-    //public IMongoCollection<Person> People => _database.GetCollection<Person>("People");
+    public IMongoDatabase Database => _database;
 }
