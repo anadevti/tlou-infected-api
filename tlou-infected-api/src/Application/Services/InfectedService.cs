@@ -37,9 +37,9 @@ public class InfectedService
         return result.ModifiedCount > 0;
     }
 
-    public async Task<bool> DeleteInfected(string i, Infected infected)
+    public async Task<bool> DeleteInfected(string id)
     {
-        var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
+        var filter = Builders<Infected>.Filter.Eq(f => f.Id, id);
         await _infectedCollection.DeleteOneAsync(filter);
         return true;
     }

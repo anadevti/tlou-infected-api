@@ -46,13 +46,13 @@ public class InfectedController: ControllerBase
     public async Task<ActionResult> Update(Infected infected)
     {
         var success = await _service.UpdateInfected(infected);
-        return success ? Ok() : NotFound();
+        return success ? Ok(infected) : NotFound();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id, Infected infected)
+    public async Task<ActionResult> Delete(string id)
     {
-        var success = await _service.DeleteInfected(id, infected);
+        var success = await _service.DeleteInfected(id);
         return success ? Ok() : NotFound();
     }
 }
