@@ -16,22 +16,18 @@ public class InfectedService
     {
         _infectedCollection = appDbContext.Database?.GetCollection<Infected>("infected");
     }
-
+    
     public async Task<Infected> CreateInfected(CreateInfectedDto createInfectedDto)
     {
         // method post
-        var infected = new Infected
-        {
-            Type = InfectedStageSmartEnum.FromName(createInfectedDto.Type),
-            Description = createInfectedDto.Description,
-            Image = createInfectedDto.Image,
-            Weaknesses = createInfectedDto.Weaknesses
-        };
+        var infected = createInfectedDto.BuildInfected();
+            
         await _infectedCollection.InsertOneAsync(infected);
         return infected;
     }
-    public async Task<bool> UpdateInfected(Infected infected)
+    public async Task<bool> UpdateInfected(CreateInfectedDto createInfectedDto)
     {
+        var infected = createInfectedDto.BuildInfected();
         var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
         var result = await _infectedCollection.ReplaceOneAsync(filter, infected);
         return result.ModifiedCount > 0;
