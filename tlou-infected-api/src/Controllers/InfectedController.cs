@@ -31,8 +31,8 @@ public class InfectedController: ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Infected?>> GetById(string id)
     {
-        var success = await _service.GetInfectedById(id);
-        return success ? Ok() : NotFound();
+        var infected = await _service.GetInfectedById(id);
+        return infected != null ? Ok(infected) : NotFound();
     }
 
     [HttpPost]
