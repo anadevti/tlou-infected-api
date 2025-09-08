@@ -3,7 +3,7 @@ using tlou_infected_api.Domain.Enums;
 
 namespace tlou_infected_api.Domain.DTO;
 
-public class CreateInfectedDto
+public class InfectedDto
 {
     public string? Id { get; set; }
     public string Type { get; set; }

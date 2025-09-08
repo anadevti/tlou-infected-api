@@ -31,22 +31,22 @@ public class InfectedController: ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Infected?>> GetById(string id)
     {
-        var infected = await _infectedCollection.Find(infectedId => infectedId.Id == id).FirstOrDefaultAsync();
-        return infected is not null ? Ok(infected) : NotFound();
+        var infected = await _service.GetInfectedById(id);
+        return infected != null ? Ok(infected) : NotFound();
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(CreateInfectedDto createInfectedDto)
+    public async Task<ActionResult> Create(InfectedDto infectedDto)
     {
-        var infected = await _service.CreateInfected(createInfectedDto); // service infected sendo chamado
+        var infected = await _service.CreateInfected(infectedDto); // service infected sendo chamado
         return CreatedAtAction(nameof(GetById),  new { id = infected.Id }, infected);
     }
 
     [HttpPut]
-    public async Task<ActionResult> Update(CreateInfectedDto createInfectedDto)
+    public async Task<ActionResult> Update(InfectedDto infectedDto)
     {
-        var success = await _service.UpdateInfected(createInfectedDto);
-        return success ? NoContent() : NotFound();
+        var success = await _service.UpdateInfected(infectedDto);
+        return success ? Ok(infectedDto) : NotFound();
     }
 
     [HttpDelete("{id}")]

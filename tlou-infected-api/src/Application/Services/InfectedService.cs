@@ -17,7 +17,7 @@ public class InfectedService
         _infectedCollection = appDbContext.Database?.GetCollection<Infected>("infected");
     }
     
-    public async Task<Infected> CreateInfected(CreateInfectedDto createInfectedDto)
+    public async Task<Infected> CreateInfected(InfectedDto createInfectedDto)
     {
         // method post
         var infected = createInfectedDto.BuildInfected();
@@ -25,7 +25,15 @@ public class InfectedService
         await _infectedCollection.InsertOneAsync(infected);
         return infected;
     }
-    public async Task<bool> UpdateInfected(CreateInfectedDto createInfectedDto)
+    
+    public async Task<bool> GetInfectedById(string id)
+    {
+        var filter = Builders<Infected>.Filter.Eq(x => x.Id, id);
+        var infected = await _infectedCollection.Find(filter).FirstOrDefaultAsync();
+        return infected != null;
+    }
+    
+    public async Task<bool> UpdateInfected(InfectedDto createInfectedDto)
     {
         var infected = createInfectedDto.BuildInfected();
         var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
