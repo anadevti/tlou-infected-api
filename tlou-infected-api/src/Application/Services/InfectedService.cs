@@ -25,6 +25,14 @@ public class InfectedService
         await _infectedCollection.InsertOneAsync(infected);
         return infected;
     }
+    
+    public async Task<bool> GetInfectedById(string id)
+    {
+        var filter = Builders<Infected>.Filter.Eq(x => x.Id, id);
+        var infected = await _infectedCollection.Find(filter).FirstOrDefaultAsync();
+        return infected != null;
+    }
+    
     public async Task<bool> UpdateInfected(CreateInfectedDto createInfectedDto)
     {
         var infected = createInfectedDto.BuildInfected();
