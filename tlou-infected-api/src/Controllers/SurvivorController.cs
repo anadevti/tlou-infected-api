@@ -16,7 +16,6 @@ public class SurvivorController : ControllerBase
         _survivorRepository = survivorRepository;
     }
     
-    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
