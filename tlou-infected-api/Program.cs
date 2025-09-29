@@ -14,7 +14,7 @@ builder.Configuration.AddEnvironmentVariables();
 
 var connectionString = builder.Configuration["MONGODB_URI"];
 var client = new MongoClient(connectionString);
-var database = client.GetDatabase("test");
+var database = client.GetDatabase("tlou-db");
 
 // Add services to the container.
 builder.Services.AddControllers();
