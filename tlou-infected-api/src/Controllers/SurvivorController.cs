@@ -14,14 +14,15 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
-        return await service.GetAll();
+        var survivor = await service.GetAll();
+        return Ok(survivor);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Survivor?>> GetById(string id)
     {
-        var survivor = _survivorRepository.GetByIdAsync(id);
-        return survivor != null ? Ok(survivor) : NotFound();
+        var survivor = await service.GetSurvivorById(id);
+        return Ok(survivor);
     }
 
     [HttpPost]
@@ -35,13 +36,13 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     public async Task<ActionResult> Update(SurvivorDto createSurvivorDto)
     {
         var success = await service.UpdateSurvivor(createSurvivorDto);
-        return success ? Ok(createSurvivorDto) : NotFound();
+        return success ? Ok(createSurvivorDto) : UnprocessableEntity();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {
         var sucess = await service.DeleteSurvivor(id);
-        return sucess ? Ok() : NotFound();
+        return sucess ? Ok() : NoContent();
     }
 }

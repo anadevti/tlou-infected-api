@@ -27,10 +27,10 @@ public class SurvivorService(IMongoRepository<Survivor> survivorRepository)
         return survivor;
     }
     
-    public async Task<bool> UpdateSurvivor(SurvivorDto createSurvivorDto, string id)
+    public async Task<bool> UpdateSurvivor(SurvivorDto createSurvivorDto)
     {
         var survivorUpdate = createSurvivorDto.BuildSurvivor();
-        await survivorRepository.UpdateAsync(id, survivorUpdate);
+        await survivorRepository.UpdateAsync(createSurvivorDto.Id, survivorUpdate);
         return true;
     }
 
