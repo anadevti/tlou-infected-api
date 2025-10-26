@@ -9,22 +9,12 @@ using tlou_infected_api.Repository;
 namespace tlou_infected_api.Controllers;
 
 [Route("api/[controller]")]
-public class SurvivorController : ControllerBase
+public class SurvivorController(SurvivorService service) : ControllerBase
 {
-    private readonly IMongoRepository<Survivor> _survivorRepository; 
-    private readonly SurvivorService _service;
-    private readonly IMongoCollection<Survivor>? _survivorService;
-
-    public SurvivorController(AppDbContext appDbContext)
-    {
-        _survivorService = appDbContext.Database?.GetCollection<Survivor>("survivor");
-        _service = new SurvivorService(appDbContext);
-    }
-    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
-        return await _survivorRepository.GetAllAsync();
+        return await service.GetAll();
     }
 
     [HttpGet("{id}")]
@@ -37,21 +27,21 @@ public class SurvivorController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Create(SurvivorDto createSurvivorDto)
     {
-        var survivor = await _service.Create(createSurvivorDto);
+        var survivor = await service.Create(createSurvivorDto);
         return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
     }
 
     [HttpPut]
     public async Task<ActionResult> Update(SurvivorDto createSurvivorDto)
     {
-        var success = await _service.UpdateSurvivor(createSurvivorDto);
+        var success = await service.UpdateSurvivor(createSurvivorDto);
         return success ? Ok(createSurvivorDto) : NotFound();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {
-        var sucess = await _service.DeleteSurvivor(id);
+        var sucess = await service.DeleteSurvivor(id);
         return sucess ? Ok() : NotFound();
     }
 }
