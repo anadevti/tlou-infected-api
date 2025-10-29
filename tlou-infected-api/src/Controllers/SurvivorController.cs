@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
@@ -7,54 +9,40 @@ using tlou_infected_api.Repository;
 namespace tlou_infected_api.Controllers;
 
 [Route("api/[controller]")]
-public class SurvivorController : ControllerBase
+public class SurvivorController(SurvivorService service) : ControllerBase
 {
-    private readonly IMongoRepository<Survivor> _survivorRepository; 
-    
-    public SurvivorController(IMongoRepository<Survivor> survivorRepository)
-    {
-        _survivorRepository = survivorRepository;
-    }
-    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
-        return await _survivorRepository.GetAllAsync();
+        var survivor = await service.GetAll();
+        return Ok(survivor);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Survivor?>> GetById(string id)
     {
-        var survivor = _survivorRepository.GetByIdAsync(id);
-        return Ok (survivor);
+        var survivor = await service.GetSurvivorById(id);
+        return Ok(survivor);
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(CreateSurvivorDto createSurvivorDto)
+    public async Task<ActionResult> Create(SurvivorDto createSurvivorDto)
     {
-        var survivor = new Survivor
-        {
-            Life = createSurvivorDto.Life,
-            Strength = createSurvivorDto.Strength,
-            Agility = createSurvivorDto.Agility,
-            MainWeapon = createSurvivorDto.MainWeapon,
-            Stealth = createSurvivorDto.Stealth
-        };
-        await _survivorRepository.AddAsync(survivor);
+        var survivor = await service.Create(createSurvivorDto);
         return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
     }
 
     [HttpPut]
-    public async Task<ActionResult> Update(Survivor survivor)
+    public async Task<ActionResult> Update(SurvivorDto createSurvivorDto)
     {
-        await _survivorRepository.UpdateAsync(survivor.Id, survivor);
-        return Ok();
+        var success = await service.UpdateSurvivor(createSurvivorDto);
+        return success ? Ok(createSurvivorDto) : UnprocessableEntity();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {
-        await _survivorRepository.DeleteAsync(id);
-        return Ok();
+        var sucess = await service.DeleteSurvivor(id);
+        return sucess ? Ok() : NoContent();
     }
 }

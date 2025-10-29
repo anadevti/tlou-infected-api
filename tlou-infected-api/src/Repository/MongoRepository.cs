@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace tlou_infected_api.Repository;
 
-public class MongoRepository<T> : IMongoRepository<T> where T : class
+public class MongoRepository<T>(IMongoDatabase database) : IMongoRepository<T>
+    where T : class
 {
-    private readonly IMongoCollection<T> _collection;
+    private readonly IMongoCollection<T> _collection = database.GetCollection<T>(GetCollectionName());
 
-    public MongoRepository(IMongoDatabase database, string collectionName)
+    private static string GetCollectionName()
     {
-        _collection = database.GetCollection<T>(collectionName);
+        // Convenção: nome da classe + "s" (ex: Survivor -> Survivors)
+        return typeof(T).Name + "s";
     }
 
     public async Task<List<T>> GetAllAsync()
