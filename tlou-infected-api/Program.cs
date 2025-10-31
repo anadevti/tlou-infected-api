@@ -22,8 +22,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddSingleton<IMongoDatabase>(database);
-builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+builder.Services.AddTransient(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
