@@ -35,4 +35,6 @@ public class Survivor
     [Range(1,5)]
     public int Stealth { get; set; }
     
+    [BsonElement("_status"), BsonRepresentation(BsonType.Int32)]
+    public SurvivorStatusEnum Status;
 }

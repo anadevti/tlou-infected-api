@@ -1,11 +1,9 @@
 namespace tlou_infected_api.Domain.Enums;
 
-public enum SurvivorEnum
+public enum SurvivorStatusEnum
 {
-    Id,
-    Life,
-    Strength,
-    Agility,
-    MainWeapon,
-    Stealth   
+    Alive,
+    Infected,
+    Deceased,
+    Disappeared
 }

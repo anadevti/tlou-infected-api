@@ -1,4 +1,5 @@
 using tlou_infected_api.Domain.Entities;
+using tlou_infected_api.Domain.Enums;
 
 namespace tlou_infected_api.Domain.DTO;
 
@@ -10,6 +11,7 @@ public class SurvivorDto
     public int Agility { get; set; }
     public required string MainWeapon { get; set; }
     public int Stealth { get; set; }
+    public SurvivorStatusEnum Status { get; set; }
 
     public Survivor BuildSurvivor()
     {
@@ -20,7 +22,8 @@ public class SurvivorDto
             Strength = Strength,
             Agility = Agility,
             MainWeapon = MainWeapon,
-            Stealth = Stealth
+            Stealth = Stealth,
+            Status = Status
         };
         return survivor;
     }
