@@ -4,6 +4,7 @@ using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
+using tlou_infected_api.Domain.Enums;
 using tlou_infected_api.Repository;
 
 namespace tlou_infected_api.Controllers;
@@ -24,6 +25,14 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         var survivor = await service.GetSurvivorById(id);
         return Ok(survivor);
     }
+    
+    [HttpGet("/survivors/{id}/status")]
+    public async Task<ActionResult<string>> GetSurvivorStatus(string id)
+    {
+        var status = await service.GetSurvivorStatus(id);
+        return Ok(status);
+    }
+    
 
     [HttpPost]
     public async Task<ActionResult> Create(SurvivorDto createSurvivorDto)
