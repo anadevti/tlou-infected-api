@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.WebEncoders.Testing;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver.GeoJsonObjectModel;
 using tlou_infected_api.Domain.Enums;
 
 
@@ -37,4 +38,8 @@ public class Survivor
     
     [BsonElement("_status"), BsonRepresentation(BsonType.Int32)]
     public SurvivorStatusEnum Status;
+    
+    [BsonElement("_location")]
+    public GeoJsonPoint<GeoJson2DGeographicCoordinates>? Location { get; set; }
+    
 }

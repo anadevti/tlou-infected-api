@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
@@ -46,6 +47,14 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     {
         var success = await service.UpdateSurvivor(createSurvivorDto);
         return success ? Ok(createSurvivorDto) : UnprocessableEntity();
+    }
+    
+    [HttpPatch("/survivors/{id}/location")]
+    
+    public async Task<ActionResult> UpdateLocation(string id, GeoJsonPoint<GeoJson2DGeographicCoordinates> location)
+    {
+        var success = await service.UpdateLocation(id, location);
+        return success ? Ok() : UnprocessableEntity();
     }
 
     [HttpDelete("{id}")]
