@@ -1,4 +1,6 @@
+using System.Data;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
 using tlou_infected_api.Domain.Entities;
@@ -39,6 +41,21 @@ public class SurvivorService(IMongoRepository<Survivor> survivorRepository)
         var survivorUpdate = createSurvivorDto.BuildSurvivor();
         await survivorRepository.UpdateAsync(createSurvivorDto.Id, survivorUpdate);
         return true;
+    }
+    
+    public async Task<bool> UpdateLocation(string id, GeoJsonPoint<GeoJson2DGeographicCoordinates> location)
+    {
+        try
+        {
+            var survivor =  await survivorRepository.GetByIdAsync(id);
+            survivor.Location = location;
+            await survivorRepository.UpdateAsync(id, survivor);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 
     public async Task<bool> DeleteSurvivor(string id)
