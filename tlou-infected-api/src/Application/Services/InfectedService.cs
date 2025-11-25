@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
-using tlou_infected_api.Domain.Enums;
 
 namespace tlou_infected_api.Application.Services;
 
@@ -19,8 +17,13 @@ public class InfectedService
     
     public async Task<Infected> CreateInfected(InfectedDto createInfectedDto)
     {
-        // method post
         var infected = createInfectedDto.BuildInfected();
+        var isValid = ValidatedInfected(infected, i => !string.IsNullOrWhiteSpace(i.Image));
+
+        if (!isValid)
+        {
+            throw new ApplicationException("Invalid infected data");
+        }
             
         await _infectedCollection.InsertOneAsync(infected);
         return infected;
@@ -36,6 +39,13 @@ public class InfectedService
     public async Task<bool> UpdateInfected(InfectedDto createInfectedDto)
     {
         var infected = createInfectedDto.BuildInfected();
+        var isValid = ValidatedInfected(infected, i => i.Image.EndsWith(".png", StringComparison.OrdinalIgnoreCase));
+
+        if (!isValid)
+        {
+            throw new Exception($"Invalid image format");
+        }
+        
         var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
         var result = await _infectedCollection.ReplaceOneAsync(filter, infected);
         return result.ModifiedCount > 0;
@@ -47,4 +57,11 @@ public class InfectedService
         await _infectedCollection.DeleteOneAsync(filter);
         return true;
     }
+
+    private bool ValidatedInfected(Infected infected, Predicate<Infected> predicate)
+    {
+        bool isValid = predicate(infected);
+        return isValid;
+    }
+    
 }
