@@ -18,11 +18,11 @@ public class InfectedService
     public async Task<Infected> CreateInfected(InfectedDto createInfectedDto)
     {
         var infected = createInfectedDto.BuildInfected();
-        var isValid = ValidatedInfected(infected);
+        var isValid = ValidatedInfected(infected, i => !string.IsNullOrWhiteSpace(i.Image));
 
         if (!isValid)
         {
-            return null;
+            throw new ApplicationException("Invalid infected data");
         }
             
         await _infectedCollection.InsertOneAsync(infected);
@@ -39,6 +39,13 @@ public class InfectedService
     public async Task<bool> UpdateInfected(InfectedDto createInfectedDto)
     {
         var infected = createInfectedDto.BuildInfected();
+        var isValid = ValidatedInfected(infected, i => i.Image.EndsWith(".png", StringComparison.OrdinalIgnoreCase));
+
+        if (!isValid)
+        {
+            throw new Exception($"Invalid image format");
+        }
+        
         var filter = Builders<Infected>.Filter.Eq(f => f.Id, infected.Id);
         var result = await _infectedCollection.ReplaceOneAsync(filter, infected);
         return result.ModifiedCount > 0;
@@ -51,9 +58,8 @@ public class InfectedService
         return true;
     }
 
-    private bool ValidatedInfected(Infected infected)
+    private bool ValidatedInfected(Infected infected, Predicate<Infected> predicate)
     {
-        Predicate<Infected> predicate = infected => !string.IsNullOrWhiteSpace(infected.Image);
         bool isValid = predicate(infected);
         return isValid;
     }
