@@ -34,6 +34,12 @@ public class SurvivorService(IMongoRepository<Survivor> survivorRepository)
         return SurvivorStatusEnum.GetName(typeof(SurvivorStatusEnum), survivor.Status);
     }
     
+    public async Task<string> GetSurvivorInventory(string id)
+    {
+        var survivorInventory = await survivorRepository.GetAllAsync();
+        return survivorRepository.GetAllAsync(CreateInventorySurvivorDto, survivorInventory);
+    }
+    
     public async Task<bool> UpdateSurvivor(SurvivorDto createSurvivorDto)
     {
         var survivorUpdate = createSurvivorDto.BuildSurvivor();
