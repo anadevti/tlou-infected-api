@@ -7,7 +7,8 @@ using tlou_infected_api.Repository;
 
 namespace tlou_infected_api.Application.Services;
 
-public class SurvivorService(IMongoRepository<Survivor> survivorRepository)
+public class SurvivorService(IMongoRepository<Survivor> survivorRepository,
+    IMongoRepository<InventorySurvivor> inventoryRepository)
 {
     public async Task<Survivor> Create(SurvivorDto createSurvivorDto)
     {
@@ -34,10 +35,10 @@ public class SurvivorService(IMongoRepository<Survivor> survivorRepository)
         return SurvivorStatusEnum.GetName(typeof(SurvivorStatusEnum), survivor.Status);
     }
     
-    public async Task<string> GetSurvivorInventory(string id)
+    public async Task<IEnumerable<InventorySurvivor>> GetSurvivorInventory()
     {
-        var survivorInventory = await survivorRepository.GetAllAsync();
-        return survivorRepository.GetAllAsync(CreateInventorySurvivorDto, survivorInventory);
+        var survivorInventory = await inventoryRepository.GetAllAsync();
+        return await inventoryRepository.GetAllAsync();
     }
     
     public async Task<bool> UpdateSurvivor(SurvivorDto createSurvivorDto)

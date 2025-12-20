@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using tlou_infected_api.Application.Services;
-using tlou_infected_api.Domain.Entities;
-using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
-using tlou_infected_api.Domain.Enums;
-using tlou_infected_api.Repository;
+using tlou_infected_api.Domain.Entities;
 
 namespace tlou_infected_api.Controllers;
 
@@ -31,6 +27,13 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     {
         var status = await service.GetSurvivorStatus(id);
         return Ok(status);
+    }
+    
+    [HttpGet("/survivors/inventory")]
+    public async Task<ActionResult<string>> GetSurvivorInventory()
+    {
+        var inventory = await service.GetSurvivorInventory();
+        return Ok(inventory);
     }
     
 
