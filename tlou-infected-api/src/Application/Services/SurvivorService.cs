@@ -1,5 +1,3 @@
-using MongoDB.Driver;
-using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
@@ -39,6 +37,23 @@ public class SurvivorService(IMongoRepository<Survivor> survivorRepository,
     {
         var survivorInventory = await inventoryRepository.GetAllAsync();
         return await inventoryRepository.GetAllAsync();
+    }
+    
+    // TODO: Implement upsert Method and New Service/controller for Inventory.
+    public async Task<InventorySurvivor> CreateSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
+    {
+        var inventorySurvivor = createInventorySurvivor.BuildInventorySurvivor();
+        
+        if (inventorySurvivor.Id == null)
+        {
+            await inventoryRepository.AddAsync(inventorySurvivor);
+        }
+        else
+        {
+            await inventoryRepository.UpdateAsync(inventorySurvivor.Id, inventorySurvivor);
+        }
+        
+        return inventorySurvivor;
     }
     
     public async Task<bool> UpdateSurvivor(SurvivorDto createSurvivorDto)
