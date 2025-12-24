@@ -8,6 +8,11 @@ namespace tlou_infected_api.Controllers;
 [Route("api/[controller]")]
 public class SurvivorController(SurvivorService service) : ControllerBase
 {
+    /// <summary>
+    /// Retrieves all survivors.
+    /// </summary>
+    /// <returns>A list of all survivors</returns>
+    /// <response code="200">Returns the list of survivors</response>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Survivor>>> Get()
     {
@@ -15,6 +20,12 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         return Ok(survivor);
     }
 
+    /// <summary>
+    /// Retrieves a specific survivor by their ID.
+    /// </summary>
+    /// <param name="id">The survivor's unique identifier</param>
+    /// <returns>The survivor with the specified ID</returns>
+    /// <response code="200">Returns the survivor</response>
     [HttpGet("{id}")]
     public async Task<ActionResult<Survivor?>> GetById(string id)
     {
@@ -22,6 +33,12 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         return Ok(survivor);
     }
     
+    /// <summary>
+    /// Retrieves the status of a specific survivor.
+    /// </summary>
+    /// <param name="id">The survivor's unique identifier</param>
+    /// <returns>The survivor's current status</returns>
+    /// <response code="200">Returns the survivor's status</response>
     [HttpGet("/survivors/{id}/status")]
     public async Task<ActionResult<string>> GetSurvivorStatus(string id)
     {
@@ -29,6 +46,11 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         return Ok(status);
     }
     
+    /// <summary>
+    /// Retrieves the inventory of all survivors.
+    /// </summary>
+    /// <returns>The inventory information for all survivors</returns>
+    /// <response code="200">Returns the survivors' inventory</response>
     [HttpGet("/survivors/inventory")]
     public async Task<ActionResult<string>> GetSurvivorInventory()
     {
@@ -36,7 +58,25 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         return Ok(inventory);
     }
     
+    
+    /// <summary>
+    /// Creates or updates a survivor's inventory.
+    /// </summary>
+    /// <returns>The created or updated inventory</returns>
+    /// <response code="200">Inventory processed successfully</response>
+    [HttpPost("/survivors/inventory")]
+    public async Task<ActionResult<string>> PostSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
+    {
+        var createInventory = await service.CreateSurvivorInventory(createInventorySurvivor);
+        return Ok(createInventory);
+    }
 
+    /// <summary>
+    /// Creates a new survivor.
+    /// </summary>
+    /// <param name="createSurvivorDto">The survivor data to create</param>
+    /// <returns>The created survivor</returns>
+    /// <response code="201">Survivor created successfully</response>
     [HttpPost]
     public async Task<ActionResult> Create(SurvivorDto createSurvivorDto)
     {
@@ -44,6 +84,13 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
     }
 
+    /// <summary>
+    /// Updates an existing survivor.
+    /// </summary>
+    /// <param name="createSurvivorDto">The survivor data to update</param>
+    /// <returns>The updated survivor data</returns>
+    /// <response code="200">Survivor updated successfully</response>
+    /// <response code="422">Unable to process the survivor update</response>
     [HttpPut]
     public async Task<ActionResult> Update(SurvivorDto createSurvivorDto)
     {
@@ -51,6 +98,13 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         return success ? Ok(createSurvivorDto) : UnprocessableEntity();
     }
 
+    /// <summary>
+    /// Deletes a survivor by their ID.
+    /// </summary>
+    /// <param name="id">The survivor's unique identifier</param>
+    /// <returns>No content</returns>
+    /// <response code="200">Survivor deleted successfully</response>
+    /// <response code="204">Survivor not found</response>
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {

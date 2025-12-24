@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.WebEncoders.Testing;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using tlou_infected_api.Domain.Enums;
-
 
 namespace tlou_infected_api.Domain.Entities;
 
@@ -13,8 +11,14 @@ public class Survivor
     [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
     
+    [BsonElement("_name"), BsonRepresentation(BsonType.String)]
+    public string? Name { get; set; }
+    
     [BsonElement("_faction_id"), BsonRepresentation(BsonType.ObjectId)]
     public string? FactionId { get; set; }
+    
+    [BsonElement("_inventory_id"), BsonRepresentation(BsonType.ObjectId)]
+    public string? InventoryId { get; set; }
     
    [BsonElement("_life"), BsonRepresentation(BsonType.Int32)]
    [Range(1,10)]
