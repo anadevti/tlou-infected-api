@@ -57,19 +57,6 @@ public class SurvivorController(SurvivorService service) : ControllerBase
         var inventory = await service.GetSurvivorInventory();
         return Ok(inventory);
     }
-    
-    
-    /// <summary>
-    /// Creates or updates a survivor's inventory.
-    /// </summary>
-    /// <returns>The created or updated inventory</returns>
-    /// <response code="200">Inventory processed successfully</response>
-    [HttpPost("/survivors/inventory")]
-    public async Task<ActionResult<string>> PostSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
-    {
-        var createInventory = await service.CreateSurvivorInventory(createInventorySurvivor);
-        return Ok(createInventory);
-    }
 
     /// <summary>
     /// Creates a new survivor.
