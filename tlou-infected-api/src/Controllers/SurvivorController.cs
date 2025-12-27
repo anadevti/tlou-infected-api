@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.DTO;
+using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 
 namespace tlou_infected_api.Controllers;
@@ -44,18 +45,6 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     {
         var status = await service.GetSurvivorStatus(id);
         return Ok(status);
-    }
-    
-    /// <summary>
-    /// Retrieves the inventory of all survivors.
-    /// </summary>
-    /// <returns>The inventory information for all survivors</returns>
-    /// <response code="200">Returns the survivors' inventory</response>
-    [HttpGet("/survivors/inventory")]
-    public async Task<ActionResult<string>> GetSurvivorInventory()
-    {
-        var inventory = await service.GetSurvivorInventory();
-        return Ok(inventory);
     }
 
     /// <summary>

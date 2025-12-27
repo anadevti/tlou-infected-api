@@ -1,8 +1,6 @@
-using MongoDB.Bson;
-using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
 
-namespace tlou_infected_api.Domain.DTO;
+namespace tlou_infected_api.Domain.DTO.Survivor;
 
 public class SurvivorDto
 {
@@ -15,9 +13,9 @@ public class SurvivorDto
     public int Stealth { get; set; }
     public SurvivorStatusEnum Status { get; set; }
 
-    public Survivor BuildSurvivor()
+    public Entities.Survivor BuildSurvivor()
     {
-        var survivor = new Survivor
+        var survivor = new Entities.Survivor
         {
             Id = Id,
             Name = Name,
