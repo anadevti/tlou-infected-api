@@ -22,8 +22,8 @@ public class InventoryService (IMongoRepository<InventorySurvivor> inventoryRepo
         return await inventoryRepository.GetAllAsync();
     }
     
-    // TODO: Implement upsert Method and New Service/controller for Inventory.
-    public async Task<InventorySurvivor> CreateSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
+    // TODO: Implement upsert Method.
+    public async Task<InventorySurvivor> UpdatePartialSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
     {
         var inventorySurvivor = createInventorySurvivor.BuildInventorySurvivor();
         

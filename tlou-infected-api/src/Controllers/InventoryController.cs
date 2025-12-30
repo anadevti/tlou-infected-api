@@ -32,4 +32,6 @@ public class InventoryController (InventoryService service) : ControllerBase
         var inventory = await service.GetSurvivorInventory();
         return Ok(inventory);
     }
+    
+    // TODO: Implement controller PATCH for update in specific fields
 }
