@@ -1,4 +1,3 @@
-using tlou_infected_api.Domain.DTO;
 using tlou_infected_api.Domain.DTO.Inventory;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Repository;
@@ -6,7 +5,8 @@ using tlou_infected_api.Repository;
 namespace tlou_infected_api.Application.Services;
 
 
-public class InventoryService (IMongoRepository<InventorySurvivor> inventoryRepository)
+public class InventoryService (IMongoRepository<InventorySurvivor> inventoryRepository,
+    IInventoryRepository _inventoryRepositoryUpsert)
 {
     public async Task<InventorySurvivor> CreateInventory(CreateInventorySurvivorDto createInventorySurvivorDto)
     {
@@ -22,21 +22,10 @@ public class InventoryService (IMongoRepository<InventorySurvivor> inventoryRepo
         return await inventoryRepository.GetAllAsync();
     }
     
-    // TODO: Implement upsert Method.
-    public async Task<InventorySurvivor> UpdatePartialSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
+    public async Task<IEnumerable<InventorySurvivor>> UpdateInventorySurvivors(InventorySurvivor inventory)
     {
-        var inventorySurvivor = createInventorySurvivor.BuildInventorySurvivor();
-        
-        if (inventorySurvivor.Id == null)
-        {
-            await inventoryRepository.AddAsync(inventorySurvivor);
-        }
-        else
-        {
-            await inventoryRepository.UpdateAsync(inventorySurvivor.Id, inventorySurvivor);
-        }
-        
-        return inventorySurvivor;
+        await _inventoryRepositoryUpsert.UpsertInventory(inventory);
+        return new[] { inventory };
     }
     
 }

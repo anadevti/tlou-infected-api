@@ -29,6 +29,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddSingleton<IMongoDatabase>(database);
 builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IMongoRepository<InventorySurvivor>, MongoRepository<InventorySurvivor>>();
 builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
 builder.Services.AddScoped<InventoryService>();

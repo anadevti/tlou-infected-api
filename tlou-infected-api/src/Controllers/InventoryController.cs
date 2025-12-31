@@ -33,5 +33,16 @@ public class InventoryController (InventoryService service) : ControllerBase
         return Ok(inventory);
     }
     
-    // TODO: Implement controller PATCH for update in specific fields
+    /// <summary>
+    /// Update the inventory of all survivors.
+    /// </summary>
+    /// <returns> Update The inventory information for all survivors</returns>
+    /// <response code="200">Returns the survivors' inventory updated</response>
+    [HttpPatch("/survivors/inventory")]
+    public async Task<ActionResult<InventorySurvivor>> UpdateSurvivorInventory(InventorySurvivor inventory)
+    {
+        var updatedInventory = await service.UpdateInventorySurvivors(inventory);
+        return Ok(updatedInventory);
+    }
+    
 }
