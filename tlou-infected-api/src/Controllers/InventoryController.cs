@@ -27,7 +27,7 @@ public class InventoryController (InventoryService service) : ControllerBase
     /// <returns>The inventory information for all survivors</returns>
     /// <response code="200">Returns the survivors' inventory</response>
     [HttpGet("/survivors/inventory")]
-    public async Task<ActionResult<InventorySurvivor>> GetSurvivorInventory()
+    public async Task<ActionResult<IEnumerable<InventorySurvivor>>> GetAllSurvivorInventories()
     {
         var inventory = await service.GetSurvivorInventory();
         return Ok(inventory);

@@ -5,8 +5,7 @@ using tlou_infected_api.Repository;
 namespace tlou_infected_api.Application.Services;
 
 
-public class InventoryService (IMongoRepository<InventorySurvivor> inventoryRepository,
-    IInventoryRepository _inventoryRepositoryUpsert)
+public class InventoryService (IInventoryRepository inventoryRepository)
 {
     public async Task<InventorySurvivor> CreateInventory(CreateInventorySurvivorDto createInventorySurvivorDto)
     {
@@ -24,7 +23,7 @@ public class InventoryService (IMongoRepository<InventorySurvivor> inventoryRepo
     
     public async Task<IEnumerable<InventorySurvivor>> UpdateInventorySurvivors(InventorySurvivor inventory)
     {
-        await _inventoryRepositoryUpsert.UpsertInventory(inventory);
+        await inventoryRepository.UpsertInventory(inventory);
         return new[] { inventory };
     }
     
