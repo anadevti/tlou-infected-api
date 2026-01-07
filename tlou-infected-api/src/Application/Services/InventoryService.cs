@@ -17,7 +17,6 @@ public class InventoryService (IInventoryRepository inventoryRepository)
     
     public async Task<IEnumerable<InventorySurvivor>> GetSurvivorInventory()
     {
-        var survivorInventory = await inventoryRepository.GetAllAsync();
         return await inventoryRepository.GetAllAsync();
     }
     
