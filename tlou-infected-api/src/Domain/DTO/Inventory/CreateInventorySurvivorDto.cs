@@ -1,6 +1,6 @@
 ﻿using tlou_infected_api.Domain.Entities;
 
-namespace tlou_infected_api.Domain.DTO;
+namespace tlou_infected_api.Domain.DTO.Inventory;
 
 public class CreateInventorySurvivorDto
 {

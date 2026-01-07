@@ -1,9 +1,9 @@
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Configuration;
 using tlou_infected_api.Data;
-using DotNetEnv;
 using MongoDB.Bson.Serialization;
+using tlou_infected_api.Application.Services;
 using tlou_infected_api.Data.Serialization;
+using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
 using tlou_infected_api.Repository;
 
@@ -29,7 +29,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddSingleton<IMongoDatabase>(database);
 builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IMongoRepository<InventorySurvivor>, MongoRepository<InventorySurvivor>>();
 builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
+builder.Services.AddScoped<InventoryService>();
 
 var app = builder.Build();
 
