@@ -20,8 +20,8 @@ public class Survivor
     [BsonElement("_inventory_id"), BsonRepresentation(BsonType.ObjectId)]
     public string? InventoryId { get; set; }
     
-   [BsonElement("_life"), BsonRepresentation(BsonType.Int32)]
-   [Range(1,10)]
+    [BsonElement("_life"), BsonRepresentation(BsonType.Int32)]
+    [Range(1,10)]
    public int Life { get; set; }
     
     [BsonElement("_strength"), BsonRepresentation(BsonType.Int32)]

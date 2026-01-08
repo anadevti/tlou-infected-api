@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using tlou_infected_api.Application.Services;
-using tlou_infected_api.Domain.DTO;
+using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.DTO.Inventory;
 using tlou_infected_api.Domain.Entities;
 
@@ -27,9 +27,9 @@ public class InventoryController (InventoryService service) : ControllerBase
     /// <returns>The inventory information for all survivors</returns>
     /// <response code="200">Returns the survivors' inventory</response>
     [HttpGet("/survivors/inventory")]
-    public async Task<ActionResult<IEnumerable<InventorySurvivor>>> GetAllSurvivorInventories()
+    public async Task<ActionResult<IEnumerable<InventorySurvivor>>> GetAllSurvivorInventories([FromQuery] PaginationParameters parameters)
     {
-        var inventory = await service.GetSurvivorInventory();
+        var inventory = await service.GetPaginatedInventorySurvivor(parameters);
         return Ok(inventory);
     }
     

@@ -1,3 +1,4 @@
+using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.DTO.Inventory;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Repository;
@@ -15,9 +16,10 @@ public class InventoryService (IInventoryRepository inventoryRepository)
         return survivorInventory;
     }
     
-    public async Task<IEnumerable<InventorySurvivor>> GetSurvivorInventory()
+    public async Task<PagedResult<InventorySurvivor>> GetPaginatedInventorySurvivor(PaginationParameters parameters)
     {
-        return await inventoryRepository.GetAllAsync();
+        var survivorInventoryPaged = await inventoryRepository.GetPaginatedAsyncInventorySurvivor(parameters);
+        return survivorInventoryPaged;
     }
     
     public async Task<IEnumerable<InventorySurvivor>> UpdateInventorySurvivors(InventorySurvivor inventory)
