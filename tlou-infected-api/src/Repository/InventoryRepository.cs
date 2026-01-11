@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.Entities;
 
 namespace tlou_infected_api.Repository;
@@ -30,5 +31,26 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
 
         var options = new BulkWriteOptions { IsOrdered = false };
         await _collection.BulkWriteAsync(new[] { upsert }, options);
+    }
+
+    public async Task<PagedResult<InventorySurvivor>> GetPaginatedAsyncInventorySurvivor(PaginationParameters parameters)
+    {
+        var filter = Builders<InventorySurvivor>.Filter.Eq(x => x.IsActive, true);
+    
+        var totalCount = await _collection.CountDocumentsAsync(filter);
+
+        var items = await _collection
+            .Find(filter)
+            .Skip(parameters.Skip)
+            .Limit(parameters.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<InventorySurvivor>
+        {
+            Items = items,
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize,
+            TotalCount = (int)totalCount
+        };
     }
 }
