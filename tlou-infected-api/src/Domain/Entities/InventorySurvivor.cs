@@ -8,6 +8,8 @@ public class InventorySurvivor
     [BsonId]
     [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
+    [BsonElement("_survivor_id"), BsonRepresentation(BsonType.ObjectId)]
+    public string? SurvivorId { get; set; }
     
     [BsonElement("_medical_kit"), BsonRepresentation(BsonType.String)]
     public string? MedicalKit { get; set; }

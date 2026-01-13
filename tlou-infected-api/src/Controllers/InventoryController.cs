@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.DTO.Inventory;
@@ -15,10 +16,10 @@ public class InventoryController (InventoryService service) : ControllerBase
     /// <returns>The created inventory</returns>
     /// <response code="200">Inventory processed successfully</response>
     [HttpPost("/inventory")]
-    public async Task<ActionResult<string>> CreateSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
+    public async Task<ActionResult<List<BsonDocument>>> CreateSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
     {
-        var createInventory = await service.CreateInventory(createInventorySurvivor);
-        return Ok(createInventory);
+        var joined = await service.CreateInventoryAndGetJoinedAsync(createInventorySurvivor);
+        return Ok(joined);
     }
     
     /// <summary>
