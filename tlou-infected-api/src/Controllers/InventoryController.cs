@@ -16,7 +16,7 @@ public class InventoryController (InventoryService service) : ControllerBase
     /// <returns>The created inventory</returns>
     /// <response code="200">Inventory processed successfully</response>
     [HttpPost("/inventory")]
-    public async Task<ActionResult<List<BsonDocument>>> CreateSurvivorInventory(CreateInventorySurvivorDto createInventorySurvivor)
+    public async Task<ActionResult<List<BsonDocument>>> CreateSurvivorInventory([FromBody]CreateInventorySurvivorDto createInventorySurvivor)
     {
         var joined = await service.CreateInventoryAndGetJoinedAsync(createInventorySurvivor);
         return Ok(joined);
