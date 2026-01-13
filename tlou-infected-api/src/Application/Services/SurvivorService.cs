@@ -1,5 +1,3 @@
-using tlou_infected_api.Domain.DTO;
-using tlou_infected_api.Domain.DTO.Inventory;
 using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;

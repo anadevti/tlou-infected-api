@@ -5,6 +5,7 @@ namespace tlou_infected_api.Domain.DTO.Inventory;
 public class CreateInventorySurvivorDto
 {
     public string? Id { get; set; }
+    public string? SurvivorId { get; set; }
     public string? MedicalKit {get; set;}
     public string? Brick {get; set;}
     public string? Knife {get; set;}
@@ -17,6 +18,7 @@ public class CreateInventorySurvivorDto
         var inventory = new InventorySurvivor
         {
             Id = Id,
+            SurvivorId = SurvivorId,
             MedicalKit = MedicalKit,
             Brick = Brick,
             Knife = Knife,
