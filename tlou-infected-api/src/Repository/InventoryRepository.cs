@@ -75,5 +75,4 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
         var result = await collectionAsBson.Aggregate<BsonDocument>(pipeline).ToListAsync();
         return result;
     }
-
 }

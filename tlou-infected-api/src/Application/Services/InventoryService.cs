@@ -19,14 +19,6 @@ public class InventoryService (IInventoryRepository inventoryRepository)
         return joined;
     }
     
-    // public async Task<InventorySurvivor> CreateInventory(CreateInventorySurvivorDto createInventorySurvivorDto)
-    // {
-    //     var survivorInventory = createInventorySurvivorDto.BuildInventorySurvivor();
-    //     
-    //     await inventoryRepository.AddAsync(survivorInventory);
-    //     return survivorInventory;
-    // }
-    
     public async Task<PagedResult<InventorySurvivor>> GetPaginatedInventorySurvivor(PaginationParameters parameters)
     {
         var survivorInventoryPaged = await inventoryRepository.GetPaginatedAsyncInventorySurvivor(parameters);
