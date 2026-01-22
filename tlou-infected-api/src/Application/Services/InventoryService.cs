@@ -15,7 +15,8 @@ public class InventoryService (IInventoryRepository inventoryRepository)
         var survivorInventory = createInventorySurvivorDto.BuildInventorySurvivor();
         await inventoryRepository.AddAsync(survivorInventory);
         
-        var joined = await inventoryRepository.JoinAndAggregateAsync(); // Executa a agregação que realiza o join e retorna os documentos agregados
+        var insertedId = survivorInventory.Id ?? throw new InvalidOperationException("Id do inventário não foi gerado."); // usa o Id definido na entidade após a inserção para filtrar a agregação
+        var joined = await inventoryRepository.JoinAndAggregateAsync(insertedId);
         return joined;
     }
     

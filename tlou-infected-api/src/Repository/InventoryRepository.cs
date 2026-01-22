@@ -55,8 +55,20 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
         };
     }
     
-    public async Task<List<BsonDocument>> JoinAndAggregateAsync()
+    public async Task<List<BsonDocument>> JoinAndAggregateAsync(string inventoryId)
     {
+        BsonValue idValue;
+        if (ObjectId.TryParse(inventoryId, out var objectId))
+        {
+            idValue = objectId;
+        }
+        else
+        {
+            idValue = inventoryId;
+        }
+
+        var matchStage = new BsonDocument("$match", new BsonDocument("_id", idValue));
+        
         var lookupStage = new BsonDocument
         {
             {
@@ -69,8 +81,9 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
                 }
             }
         };
-
-        var pipeline = new[] { lookupStage };
+        
+        var unwindStage = new BsonDocument("$unwind", new BsonDocument { { "path", "$joined" }, { "preserveNullAndEmptyArrays", true } });
+        var pipeline = new[] { matchStage, lookupStage, unwindStage };
         var collectionAsBson = _collection.Database.GetCollection<BsonDocument>("InventorySurvivors");
         var result = await collectionAsBson.Aggregate<BsonDocument>(pipeline).ToListAsync();
         return result;

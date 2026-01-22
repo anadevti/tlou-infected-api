@@ -8,5 +8,5 @@ public interface IInventoryRepository : IMongoRepository<InventorySurvivor>
 {
     Task UpsertInventory(InventorySurvivor inventory);
     Task<PagedResult<InventorySurvivor>> GetPaginatedAsyncInventorySurvivor(PaginationParameters parameters);
-    Task<List<BsonDocument>> JoinAndAggregateAsync();
+    Task<List<BsonDocument>> JoinAndAggregateAsync(string inventoryId);
 }
