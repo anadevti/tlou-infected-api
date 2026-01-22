@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.Entities;
@@ -58,14 +58,8 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
     public async Task<List<BsonDocument>> JoinAndAggregateAsync(string inventoryId)
     {
         BsonValue idValue;
-        if (ObjectId.TryParse(inventoryId, out var objectId))
-        {
-            idValue = objectId;
-        }
-        else
-        {
-            idValue = inventoryId;
-        }
+        var inventoryParse = ObjectId.TryParse(inventoryId, out var objectId)
+        idValue = inventoryParse ? objectId : inventoryId
 
         var matchStage = new BsonDocument("$match", new BsonDocument("_id", idValue));
         
