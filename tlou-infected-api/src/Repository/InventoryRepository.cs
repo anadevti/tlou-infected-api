@@ -58,8 +58,8 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
     public async Task<List<BsonDocument>> JoinAndAggregateAsync(string inventoryId)
     {
         BsonValue idValue;
-        var inventoryParse = ObjectId.TryParse(inventoryId, out var objectId)
-        idValue = inventoryParse ? objectId : inventoryId
+        var inventoryParse = ObjectId.TryParse(inventoryId, out var objectId);
+        idValue = inventoryParse ? objectId : inventoryId;
 
         var matchStage = new BsonDocument("$match", new BsonDocument("_id", idValue));
         
