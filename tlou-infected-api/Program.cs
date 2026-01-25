@@ -5,6 +5,7 @@ using tlou_infected_api.Application.Services;
 using tlou_infected_api.Data.Serialization;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
+using tlou_infected_api.Handlers;
 using tlou_infected_api.Repository;
 
 DotNetEnv.Env.Load();
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IMongoRepository<InventorySurvivor>, MongoRepository<InventorySurvivor>>();
 builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
 builder.Services.AddScoped<InventoryService>();
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -46,6 +49,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
