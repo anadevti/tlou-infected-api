@@ -1,32 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.Entities;
-using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
-using tlou_infected_api.Domain.Enums;
 
 namespace tlou_infected_api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class FactionController : ControllerBase
-{
-        private readonly IMongoCollection<Faction>? _factionCollection;
-    
-        public FactionController(AppDbContext appDbContext)
-        {
-            _factionCollection = appDbContext.Database?.GetCollection<Faction>("faction");
-        }
-    
+public class FactionController(FactionService service) : ControllerBase
+{ 
         /// <summary>
         /// Retrieves all factions.
         /// </summary>
         /// <returns>A list of all factions</returns>
         /// <response code="200">Returns the list of factions</response>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Faction>>> Get()
+        public async Task<ActionResult<IEnumerable<Faction>>> GetFactions()
         {
-            return await _factionCollection.Find(FilterDefinition<Faction>.Empty).ToListAsync();
+            var getFaction = await service.GetAllFactions();
+            return Ok(getFaction);
         }
     
         /// <summary>
@@ -37,10 +29,10 @@ public class FactionController : ControllerBase
         /// <response code="200">Returns the faction</response>
         /// <response code="404">Faction not found</response>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Infected?>> GetById(string id)
+        public async Task<ActionResult<Infected?>> GetFactionById(string id)
         {
-            var faction = await _factionCollection.Find(factionId => factionId.Id == id).FirstOrDefaultAsync();
-            return faction is not null ? Ok(faction) : NotFound();
+            var faction = await service.GetFactionById(id);
+            return Ok(faction);
         }
     
         /// <summary>
@@ -50,16 +42,10 @@ public class FactionController : ControllerBase
         /// <returns>The created faction</returns>
         /// <response code="201">Faction created successfully</response>
         [HttpPost]
-        public async Task<ActionResult> Create(CreateFactionDto createFactionDto)
+        public async Task<ActionResult> CreateFaction(CreateFactionDto createFactionDto)
         {
-            var faction = new Faction
-            {
-                FactionType = createFactionDto.FactionType,
-                FactionStatus = createFactionDto.FactionStatus,
-                Territory = createFactionDto.Territory
-            };
-            await _factionCollection.InsertOneAsync(faction);
-            return CreatedAtAction(nameof(GetById),  new { id = faction.Id }, faction);
+            var createFaction = await service.Create(createFactionDto);
+            return CreatedAtAction(nameof(GetFactionById), new { createFaction.Id }, createFaction);
         }
     
         /// <summary>
@@ -69,11 +55,10 @@ public class FactionController : ControllerBase
         /// <returns>The updated faction data</returns>
         /// <response code="200">Faction updated successfully</response>
         [HttpPut]
-        public async Task<ActionResult> Update(Faction faction)
+        public async Task<ActionResult> Update(CreateFactionDto createFactionDto)
         {
-            var filter = Builders<Faction>.Filter.Eq(f => f.Id, faction.Id);
-            var updateedFaction = await _factionCollection.ReplaceOneAsync(filter, faction);
-            return Ok(updateedFaction);
+            var updateFaction = await service.UpdateFaction(createFactionDto);
+            return Ok(updateFaction);
         }
     
         /// <summary>
@@ -85,8 +70,7 @@ public class FactionController : ControllerBase
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(string id)
         {
-            var filter = Builders<Faction>.Filter.Eq(f => f.Id, id);
-            await _factionCollection.DeleteOneAsync(filter);
-            return Ok();
+            var deleteFaction = await service.DeleteFaction(id);
+            return Ok(deleteFaction);
         }
 }

@@ -34,6 +34,7 @@ builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IMongoRepository<InventorySurvivor>, MongoRepository<InventorySurvivor>>();
 builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
 builder.Services.AddScoped<InventoryService>();
+builder.Services.AddScoped<FactionService>();
 
 var app = builder.Build();
 
