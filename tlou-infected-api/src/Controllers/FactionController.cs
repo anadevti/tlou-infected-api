@@ -29,7 +29,7 @@ public class FactionController(FactionService service) : ControllerBase
         /// <response code="200">Returns the faction</response>
         /// <response code="404">Faction not found</response>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Infected?>> GetFactionById(string id)
+        public async Task<ActionResult<Faction?>> GetFactionById(string id)
         {
             var faction = await service.GetFactionById(id);
             return Ok(faction);
