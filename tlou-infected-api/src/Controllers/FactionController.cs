@@ -32,6 +32,11 @@ public class FactionController(FactionService service) : ControllerBase
         public async Task<ActionResult<Faction?>> GetFactionById(string id)
         {
             var faction = await service.GetFactionById(id);
+
+            if (faction is null)
+            {
+                return NotFound();
+            }
             return Ok(faction);
         }
     
