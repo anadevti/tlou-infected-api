@@ -13,6 +13,11 @@ public class ValidationExceptionHandler : IExceptionHandler
             return false;
         }
 
+        // Se a resposta já foi iniciada, não é possível limpá-la ou substituí-la com segurança
+        if (httpContext.Response.HasStarted)
+        {
+            return false;
+        }
         // Limpa qualquer conteúdo anterior e configura a resposta
         httpContext.Response.Clear();
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
