@@ -1,6 +1,4 @@
-﻿using tlou_infected_api.Domain.Entities;
-
-namespace tlou_infected_api.Domain.DTO.Inventory;
+﻿namespace tlou_infected_api.Domain.DTO.Inventory;
 
 public class CreateInventorySurvivorDto
 {
@@ -12,21 +10,4 @@ public class CreateInventorySurvivorDto
     public string? Flamethrower {get; set;}
     public string? Pills { get; set; }
     public bool IsActive {get; set;}
-    
-    public InventorySurvivor BuildInventorySurvivor()
-    {
-        var inventory = new InventorySurvivor
-        {
-            Id = Id,
-            SurvivorId = SurvivorId,
-            MedicalKit = MedicalKit,
-            Brick = Brick,
-            Knife = Knife,
-            Flamethrower = Flamethrower,
-            Pills = Pills,
-            IsActive = IsActive
-        };
-        return inventory;
-    }
-    
 }

@@ -1,12 +1,12 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
-using MongoDB.Bson;
+using Mapster;
 using MongoDB.Driver;
 using tlou_infected_api.Data;
 using MongoDB.Bson.Serialization;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Data.Serialization;
+using tlou_infected_api.Domain.DTO;
+using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
 using tlou_infected_api.Handlers;
@@ -17,7 +17,9 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
-var connectionString = builder.Configuration["MONGODB_URI"];
+var connectionString = builder.Configuration["MONGODB_URI"]
+                       ?? builder.Configuration["MongoDB:ConnectionString"];
+
 var client = new MongoClient(connectionString);
 var database = client.GetDatabase("tlou-db");
 
@@ -49,6 +51,10 @@ builder.Services.AddScoped<InventoryService>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// Mapster mapping
+TypeAdapterConfig<SurvivorDto, Survivor>.NewConfig();
+TypeAdapterConfig<InfectedDto, Infected>.NewConfig();
+
 var app = builder.Build();
 
 BsonSerializer.RegisterSerializer(typeof(InfectedStageSmartEnum), new InfectedStageSmartEnumSerializer());
@@ -61,7 +67,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler();
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
