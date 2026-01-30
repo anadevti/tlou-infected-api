@@ -17,7 +17,7 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
-var connectionString = builder.Configuration["MONGODB_URI"];
+var connectionString = builder.Configuration["MONGODB_URI"] ?? builder.Configuration["MongoDB:ConnectionString"];
 var client = new MongoClient(connectionString);
 var database = client.GetDatabase("tlou-db");
 

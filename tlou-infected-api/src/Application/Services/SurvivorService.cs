@@ -1,3 +1,4 @@
+using Mapster;
 using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
@@ -5,12 +6,11 @@ using tlou_infected_api.Repository;
 
 namespace tlou_infected_api.Application.Services;
 
-public class SurvivorService(IMongoRepository<Survivor> survivorRepository,
-    IMongoRepository<InventorySurvivor> inventoryRepository)
+public class SurvivorService(IMongoRepository<Survivor> survivorRepository)
 {
     public async Task<Survivor> Create(SurvivorDto createSurvivorDto)
     {
-        var survivor = createSurvivorDto.BuildSurvivor();
+        var survivor = createSurvivorDto.Adapt<Survivor>();
         
         await survivorRepository.AddAsync(survivor);
         return survivor;
@@ -35,7 +35,7 @@ public class SurvivorService(IMongoRepository<Survivor> survivorRepository,
     
     public async Task<bool> UpdateSurvivor(SurvivorDto createSurvivorDto)
     {
-        var survivorUpdate = createSurvivorDto.BuildSurvivor();
+        var survivorUpdate = createSurvivorDto.Adapt<Survivor>();
         await survivorRepository.UpdateAsync(createSurvivorDto.Id, survivorUpdate);
         return true;
     }
