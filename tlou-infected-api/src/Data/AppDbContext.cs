@@ -1,6 +1,4 @@
-﻿// csharp
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace tlou_infected_api.Data;
 
