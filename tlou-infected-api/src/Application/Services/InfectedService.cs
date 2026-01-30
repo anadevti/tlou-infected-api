@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Mapster;
+using MongoDB.Driver;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Data;
 using tlou_infected_api.Domain.DTO;
@@ -17,7 +18,7 @@ public class InfectedService
     
     public async Task<Infected> CreateInfected(InfectedDto createInfectedDto)
     {
-        var infected = createInfectedDto.BuildInfected();
+        var infected = createInfectedDto.Adapt<Infected>();
         var isValid = ValidatedInfected(infected, i => !string.IsNullOrWhiteSpace(i.Image));
 
         if (!isValid)
@@ -38,7 +39,7 @@ public class InfectedService
     
     public async Task<bool> UpdateInfected(InfectedDto createInfectedDto)
     {
-        var infected = createInfectedDto.BuildInfected();
+        var infected = createInfectedDto.Adapt<Infected>();
         var isValid = ValidatedInfected(infected, i => i.Image.EndsWith(".png", StringComparison.OrdinalIgnoreCase));
 
         if (!isValid)

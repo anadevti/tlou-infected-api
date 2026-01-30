@@ -1,3 +1,4 @@
+using Mapster;
 using MongoDB.Bson;
 using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.DTO.Inventory;
@@ -12,7 +13,7 @@ public class InventoryService (IInventoryRepository inventoryRepository)
     
     public async Task<List<BsonDocument>> CreateInventoryAndGetJoinedAsync(CreateInventorySurvivorDto createInventorySurvivorDto)
     {
-        var survivorInventory = createInventorySurvivorDto.BuildInventorySurvivor();
+        var survivorInventory = createInventorySurvivorDto.Adapt<InventorySurvivor>();
         await inventoryRepository.AddAsync(survivorInventory);
         
         var insertedId = survivorInventory.Id ?? throw new InvalidOperationException("Id do inventário não foi gerado."); // usa o Id definido na entidade após a inserção para filtrar a agregação
