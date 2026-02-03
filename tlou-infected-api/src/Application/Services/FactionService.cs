@@ -20,8 +20,8 @@ public class FactionService (IMongoRepository<Faction> factionRepository)
 
     public async Task<Faction> GetFactionById(string id)
     {
-        var factionId = await factionRepository.GetByIdAsync(id);
-        return factionId;
+        var faction = await factionRepository.GetByIdAsync(id);
+        return faction;
     }
     
     public async Task<Faction> UpdateFaction(CreateFactionDto createFactionDto)
