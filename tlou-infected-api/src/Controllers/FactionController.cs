@@ -75,7 +75,7 @@ public class FactionController(FactionService service) : ControllerBase
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(string id)
         {
-            var deleteFaction = await service.DeleteFaction(id);
-            return Ok(deleteFaction);
+            var deletedFaction = await service.DeleteFaction(id);
+            return Ok(deletedFaction);
         }
 }
