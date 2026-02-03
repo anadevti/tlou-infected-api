@@ -12,20 +12,4 @@ public class SurvivorDto
     public required string MainWeapon { get; set; }
     public int Stealth { get; set; }
     public SurvivorStatusEnum Status { get; set; }
-
-    public Entities.Survivor BuildSurvivor()
-    {
-        var survivor = new Entities.Survivor
-        {
-            Id = Id,
-            Name = Name,
-            Life = Life,
-            Strength = Strength,
-            Agility = Agility,
-            MainWeapon = MainWeapon,
-            Stealth = Stealth,
-            Status = Status
-        };
-        return survivor;
-    }
 }
