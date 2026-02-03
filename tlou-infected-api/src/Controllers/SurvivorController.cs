@@ -7,6 +7,7 @@ using tlou_infected_api.Domain.Entities;
 namespace tlou_infected_api.Controllers;
 
 [Route("api/[controller]")]
+[ApiController]
 public class SurvivorController(SurvivorService service) : ControllerBase
 {
     /// <summary>
