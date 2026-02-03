@@ -62,8 +62,8 @@ public class FactionController(FactionService service) : ControllerBase
         [HttpPut]
         public async Task<ActionResult> Update(CreateFactionDto createFactionDto)
         {
-            var updateFaction = await service.UpdateFaction(createFactionDto);
-            return Ok(updateFaction);
+            var updatedFaction = await service.UpdateFaction(createFactionDto);
+            return Ok(updatedFaction);
         }
     
         /// <summary>
