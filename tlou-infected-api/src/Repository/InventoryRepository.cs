@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using tlou_infected_api.Domain.Common;
 using tlou_infected_api.Domain.Entities;
 
@@ -52,5 +53,33 @@ public class InventoryRepository : MongoRepository<InventorySurvivor>, IInventor
             PageSize = parameters.PageSize,
             TotalCount = (int)totalCount
         };
+    }
+    
+    public async Task<List<BsonDocument>> JoinAndAggregateAsync(string inventoryId)
+    {
+        BsonValue idValue;
+        var inventoryParse = ObjectId.TryParse(inventoryId, out var objectId);
+        idValue = inventoryParse ? objectId : inventoryId;
+
+        var matchStage = new BsonDocument("$match", new BsonDocument("_id", idValue));
+        
+        var lookupStage = new BsonDocument
+        {
+            {
+                "$lookup", new BsonDocument
+                {
+                    { "from", "Survivors" },
+                    { "localField", "_survivor_id" },
+                    { "foreignField", "_id" },
+                    { "as", "joined" }
+                }
+            }
+        };
+        
+        var unwindStage = new BsonDocument("$unwind", new BsonDocument { { "path", "$joined" }, { "preserveNullAndEmptyArrays", true } });
+        var pipeline = new[] { matchStage, lookupStage, unwindStage };
+        var collectionAsBson = _collection.Database.GetCollection<BsonDocument>("InventorySurvivors");
+        var result = await collectionAsBson.Aggregate<BsonDocument>(pipeline).ToListAsync();
+        return result;
     }
 }

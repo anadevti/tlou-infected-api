@@ -1,3 +1,7 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using tlou_infected_api.Data;
 using MongoDB.Bson.Serialization;
@@ -5,6 +9,7 @@ using tlou_infected_api.Application.Services;
 using tlou_infected_api.Data.Serialization;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
+using tlou_infected_api.Handlers;
 using tlou_infected_api.Repository;
 
 DotNetEnv.Env.Load();
@@ -23,18 +28,26 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
-builder.Services.AddControllers();
+
+// Configure JSON serialization BEFORE building the app
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddSingleton<IMongoDatabase>(database);
 builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
-builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IMongoRepository<InventorySurvivor>, MongoRepository<InventorySurvivor>>();
 builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
 builder.Services.AddScoped<InventoryService>();
-builder.Services.AddScoped<FactionService>();
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -47,6 +60,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
