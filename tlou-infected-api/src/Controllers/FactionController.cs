@@ -49,8 +49,8 @@ public class FactionController(FactionService service) : ControllerBase
         [HttpPost]
         public async Task<ActionResult> CreateFaction(CreateFactionDto createFactionDto)
         {
-            var createFaction = await service.Create(createFactionDto);
-            return CreatedAtAction(nameof(GetFactionById), new { createFaction.Id }, createFaction);
+            var createdFaction = await service.Create(createFactionDto);
+            return CreatedAtAction(nameof(GetFactionById), new { createdFaction.Id }, createdFaction);
         }
     
         /// <summary>
