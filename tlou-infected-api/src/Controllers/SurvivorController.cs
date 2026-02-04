@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using tlou_infected_api.Application.Services;
-using tlou_infected_api.Domain.DTO;
 using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 
