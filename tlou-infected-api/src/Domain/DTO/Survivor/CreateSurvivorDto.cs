@@ -27,11 +27,11 @@ public sealed class SurvivorValidator : AbstractValidator<SurvivorDto>
         
         RuleFor(x => x.Life)
             .GreaterThanOrEqualTo(1)
-            .WithMessage("O Campo Life não pode ser menor que zero.");
+            .WithMessage("O Campo Life deve ser maior ou igual a 1.");
 
         RuleFor(x => x.Strength)
             .GreaterThanOrEqualTo(1)
-            .WithMessage("O Campo Strength não pode ser menor que zero.");
+            .WithMessage("O Campo Strength deve ser maior ou igual a 1.");
 
         RuleFor(x => x.Agility)
             .GreaterThanOrEqualTo(1)
