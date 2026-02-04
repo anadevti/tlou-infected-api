@@ -34,7 +34,7 @@ public sealed class SurvivorValidator : AbstractValidator<SurvivorDto>
             .WithMessage("O Campo Strength não pode ser menor que zero.");
 
         RuleFor(x => x.Agility)
-            .LessThanOrEqualTo(1)
+            .GreaterThanOrEqualTo(1)
             .WithMessage("O Campo Agility não pode ser menor que zero.");
         
         RuleFor(x => x.MainWeapon)
