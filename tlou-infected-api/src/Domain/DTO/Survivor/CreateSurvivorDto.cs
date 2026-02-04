@@ -42,12 +42,4 @@ public sealed class SurvivorValidator : AbstractValidator<SurvivorDto>
             .NotNull()
             .WithMessage("O Campo MainWeapon não pode ser vazio.");
     }
-    
-    public void ValidateSurvivor()
-    {
-        SurvivorDto survivor = new SurvivorDto();
-        var validator = new SurvivorValidator();
-
-        ValidationResult result = validator.Validate(survivor);
-    }
 }
