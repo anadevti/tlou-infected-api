@@ -9,6 +9,7 @@ using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
 using tlou_infected_api.Handlers;
+using tlou_infected_api.Kafka;
 using tlou_infected_api.Repository;
 
 DotNetEnv.Env.Load();
@@ -47,6 +48,11 @@ builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorServic
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+// kafka
+// builder.Services.AddHostedService<ProducerWorker>();
+// builder.Services.AddHostedService<ConsumerWorker>();
+// builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerTestService>();
 
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SurvivorValidator>())
