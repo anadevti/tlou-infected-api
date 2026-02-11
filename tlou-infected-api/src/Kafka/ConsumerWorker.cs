@@ -17,31 +17,49 @@ public class ConsumerWorker : BackgroundService
         _topic = _config.GetSection("Kafka:Topic").Value;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var config = new ConsumerConfig
         {
             BootstrapServers = _host,
             GroupId = $"{_topic}-group-0",
-            AutoOffsetReset = AutoOffsetReset.Earliest
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            EnableAutoCommit = false
         };
 
-        using (var consumer = new ConsumerBuilder<string, string>(config).Build())
+        using var consumer = new ConsumerBuilder<string, string>(config).Build();
+        
+        consumer.Subscribe(_topic);
+        _log.LogInformation($"Kafka Consumer inscrito no tópico: {_topic}");
+
+        try
         {
-            consumer.Subscribe(_topic);
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    var consumeResult = consumer.Consume(stoppingToken);
-                    _log.LogInformation($"Consume Result: {consumeResult.Message.Value}");
+                    var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
+                    
+                    if (consumeResult != null)
+                    {
+                        _log.LogInformation($"Mensagem recebida: {consumeResult.Message.Value}");
+                        consumer.Commit(consumeResult);
+                    }
+                    await Task.Delay(100, stoppingToken);
                 }
-                catch (OperationCanceledException oce)
+                catch (ConsumeException ex)
                 {
-                    continue;
+                    _log.LogError($"Erro ao consumir mensagem: {ex.Message}");
+                }catch (OperationCanceledException)
+                {
+                    break;
                 }
             }
         }
-        return Task.CompletedTask;
+        finally
+        {
+            consumer.Close();
+            _log.LogInformation("Kafka Consumer encerrado");
+        }
     }
 }

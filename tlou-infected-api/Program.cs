@@ -49,10 +49,9 @@ builder.Services.AddScoped<InventoryService>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-// kafka
-// builder.Services.AddHostedService<ProducerWorker>();
-// builder.Services.AddHostedService<ConsumerWorker>();
-// builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerTestService>();
+// kafka config
+builder.Services.AddHostedService<ConsumerWorker>();
+builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerTestService>();
 
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SurvivorValidator>())
@@ -61,7 +60,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
-
 
 var app = builder.Build();
 
