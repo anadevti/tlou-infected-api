@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Domain.DTO.Survivor;
@@ -7,8 +8,11 @@ namespace tlou_infected_api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SurvivorController(SurvivorService service) : ControllerBase
+public class SurvivorController(SurvivorService service, 
+    IKafkaProducerService producer) : ControllerBase
 {
+    private readonly IKafkaProducerService _kafkaProducer;
+    
     /// <summary>
     /// Retrieves all survivors.
     /// </summary>
@@ -31,6 +35,8 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     public async Task<ActionResult<Survivor?>> GetById(string id)
     {
         var survivor = await service.GetSurvivorById(id);
+        if (survivor == null) return 
+            Accepted(new { status = "processing" }); // 202 enquanto a mensagem nao eh processada
         return Ok(survivor);
     }
     
@@ -54,10 +60,10 @@ public class SurvivorController(SurvivorService service) : ControllerBase
     /// <returns>The created survivor</returns>
     /// <response code="201">Survivor created successfully</response>
     [HttpPost]
-    public async Task<ActionResult> Create(SurvivorDto createSurvivorDto)
+    public async Task<ActionResult> Create(SurvivorDto createSurvivorDto) // utilizando kafka
     {
-        var survivor = await service.Create(createSurvivorDto);
-        return CreatedAtAction(nameof(GetById),  new { id = survivor.Id }, survivor);
+        await service.SendMessageAsync(topic: "create-survivor", key: null, payload: createSurvivorDto);
+        return Ok(createSurvivorDto);
     }
 
     /// <summary>
