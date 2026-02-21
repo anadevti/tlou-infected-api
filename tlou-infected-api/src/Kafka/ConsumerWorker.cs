@@ -20,7 +20,6 @@ public class ConsumerWorker : BackgroundService
         _config = config;
         _scopeFactory = scopeFactory;
         _host = _config.GetSection("Kafka:Host").Value;
-        _topic = _config.GetSection("Kafka:Topic").Value;
         _topicSurvivor = _config.GetSection("Kafka:TopicSurvivor").Value;
     }
 
@@ -43,7 +42,6 @@ public class ConsumerWorker : BackgroundService
 
         using var consumer = new ConsumerBuilder<string, string>(config).Build();
         using var consumerSurvivor = new ConsumerBuilder<string, string>(configSurvivor).Build();
-        consumer.Subscribe(_topic);
         _log.LogInformation($"Kafka Consumer inscrito no tópico: {_topic}");
         consumerSurvivor.Subscribe(_topicSurvivor);
         _log.LogInformation($"Kafka Consumer Survivor inscrito no tópico: {_topicSurvivor}");

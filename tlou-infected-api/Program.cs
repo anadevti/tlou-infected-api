@@ -51,7 +51,7 @@ builder.Services.AddProblemDetails();
 
 // kafka config
 builder.Services.AddHostedService<ConsumerWorker>();
-builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerTestService>();
+builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
 
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SurvivorValidator>())
