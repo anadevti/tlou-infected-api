@@ -1,12 +1,11 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
-using MongoDB.Bson;
+using FluentValidation.AspNetCore;
 using MongoDB.Driver;
 using tlou_infected_api.Data;
 using MongoDB.Bson.Serialization;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Data.Serialization;
+using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
 using tlou_infected_api.Handlers;
@@ -48,6 +47,15 @@ builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorServic
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddControllers()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SurvivorValidator>())
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
 
 var app = builder.Build();
 
