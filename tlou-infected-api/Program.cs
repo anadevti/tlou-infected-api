@@ -9,6 +9,7 @@ using tlou_infected_api.Domain.DTO.Survivor;
 using tlou_infected_api.Domain.Entities;
 using tlou_infected_api.Domain.Enums;
 using tlou_infected_api.Handlers;
+using tlou_infected_api.Kafka;
 using tlou_infected_api.Repository;
 
 DotNetEnv.Env.Load();
@@ -48,6 +49,10 @@ builder.Services.AddScoped<InventoryService>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// kafka config
+builder.Services.AddHostedService<ConsumerWorker>();
+builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
+
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SurvivorValidator>())
     .AddJsonOptions(options =>
@@ -55,7 +60,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
-
 
 var app = builder.Build();
 
