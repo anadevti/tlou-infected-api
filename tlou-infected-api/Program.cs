@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using MongoDB.Driver;
 using tlou_infected_api.Data;
 using MongoDB.Bson.Serialization;
+using Scalar.AspNetCore;
 using tlou_infected_api.Application.Services;
 using tlou_infected_api.Data.Serialization;
 using tlou_infected_api.Domain.DTO.Survivor;
@@ -22,12 +23,7 @@ var client = new MongoClient(connectionString);
 var database = client.GetDatabase("tlou-db");
 
 // Add services to the container.
-builder.Services.AddSwaggerGen(c =>
-{
-    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddOpenApi();
 
 // Configure JSON serialization BEFORE building the app
 builder.Services.AddControllers()
@@ -37,14 +33,14 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddSingleton<IMongoDatabase>(database);
 builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IMongoRepository<InventorySurvivor>, MongoRepository<InventorySurvivor>>();
-builder.Services.AddScoped<tlou_infected_api.Application.Services.SurvivorService>();
+builder.Services.AddScoped<SurvivorService>();
+builder.Services.AddScoped<FactionService>();
+builder.Services.AddScoped<InfectedService>();
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -68,8 +64,14 @@ BsonSerializer.RegisterSerializer(typeof(InfectedStageSmartEnum), new InfectedSt
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("TLOU Infected API")
+            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
+
 }
 
 app.UseExceptionHandler();
