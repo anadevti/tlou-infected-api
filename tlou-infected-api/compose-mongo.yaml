@@ -1,18 +1,71 @@
-﻿services:
+﻿version: "3.9"
+
+services:
   mongo:
-    image: mongo
+    image: mongo:latest
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - net
 
   mongo-express:
-    image: mongo-express
+    image: mongo-express:latest
     restart: always
+    depends_on:
+      - mongo
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_ENABLED: "true"
       ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
       ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
+    networks:
+      - net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    restart: always
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - net
+    
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    networks:
+      - net
+    depends_on:
+      - kafka
+    ports:
+      - "7777:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=kafka
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+
+networks:
+  net:
+    driver: bridge
